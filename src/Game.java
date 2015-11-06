@@ -12,46 +12,51 @@ import java.awt.event.MouseListener;
 @SuppressWarnings("serial")
 public class Game extends JPanel implements KeyListener, MouseListener{
 
-    public boolean exit = false; // Booleans
-    public boolean wallCollision = false;
-    public boolean secHasPassed = false;
-    public boolean options = false;
-    public boolean buttonOne = false;
-    public boolean levelInGame = false;
-    public boolean gravity = true;
+    boolean exit = false; // Booleans
+    boolean wallCollision = false;
+    boolean secHasPassed = false;
+    boolean options = false;
+    boolean buttonOne = false;
+    boolean levelInGame = false;
+    boolean gravity = true;
+    boolean running = true;
 
-    public boolean canMoveL = false;
-    public boolean canMoveR = false;
+    boolean canMoveL = false;
+    boolean canMoveR = false;
 
-    public int charX = 300; // char int stats
-    public int charY = 250;
-    public int charW = 20;
-    public int charH = 30;
-    public int charVX = 0;
-    public int charVY = 0;
-    public int numOfJumps = 0;
+    int charX = 300; // char int stats
+    int charY = 250;
+    int charW = 20;
+    int charH = 30;
+    int charVX = 0;
+    int charVY = 0;
+    int numOfJumps = 0;
 
-    public int buttOneX = 20; // button int stats
-    public int buttOneY = 20;
+    int buttOneX = 20; // button int stats
+    int buttOneY = 20;
 
-    public int platOneX = 160;//Platform one stats
-    public int platOneY = 289;
-    public int platOneW = 50;
-    public int platOneH = 10;
+    int platOneX = 160;//Platform one stats
+    int platOneY = 289;
+    int platOneW = 50;
+    int platOneH = 10;
 
-    public int platTwoX = 305; // Platform two stats
-    public int platTwoY = 234;
-    public int platTwoW = platOneW;
-    public int platTwoH = platOneH;
+    int platTwoX = 305; // Platform two stats
+    int platTwoY = 234;
+    int platTwoW = platOneW;
+    int platTwoH = platOneH;
 
-    public int platThreeX = 443;
-    public int platThreeY = 168;
-    public int platThreeW = platOneW;
-    public int platThreeH = platOneH;
+    int platThreeX = 443;
+    int platThreeY = 168;
+    int platThreeW = platOneW;
+    int platThreeH = platOneH;
 
-    public int wallX = 0; // wallX = 0 because it needs to spawn at the side
-    public int wallY = 380;
-    public int secondsPassed = 0;
+    int wallX = 0; // wallX = 0 because it needs to spawn at the side
+    int wallY = 380;
+    int secondsPassed = 0;
+
+    int goomX = 525; // Enemy stats
+    int goomY = wallY-30;
+    int goomSize = 20;
 
     // Long
     long time = System.currentTimeMillis();
@@ -106,10 +111,13 @@ public class Game extends JPanel implements KeyListener, MouseListener{
             g.setColor(Color.BLACK); // wall
             g.fillRect(wallX, wallY, 800, 10);
 
-            g.setColor(Color.BLACK); // Platforms
+            // Platforms
             g.fillRect(platOneX, platOneY, platOneW, platOneH);
             g.fillRect(platTwoX, platTwoY, platTwoW,platTwoH);
             g.fillRect(platThreeX, platThreeY, platThreeW,platThreeH);
+
+            // Enemies
+            g.fillRect(goomX,goomY,goomSize,goomSize);
         }
 
         if(options) {
@@ -190,6 +198,22 @@ public class Game extends JPanel implements KeyListener, MouseListener{
 
     public void options() {
         //TODO  get options running and make it happen on escape
+
+    }
+
+    private void backAndForthEnemy() {
+        int second = 0;
+        if(running) {
+            goomX += 3;
+            long time = System.currentTimeMillis();
+            if(time > time+1000) {
+                time = System.currentTimeMillis();
+                second += 1;
+                if(second > 1) {
+                    //TODO
+                }
+            }
+        }
 
     }
 
