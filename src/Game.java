@@ -39,7 +39,15 @@ public class Game extends JPanel implements KeyListener, MouseListener{
     public int platOneW = 50;
     public int platOneH = 10;
 
-    public int platTwoX = 443;
+    public int platTwoX = 305; // Platform two stats
+    public int platTwoY = 234;
+    public int platTwoW = platOneW;
+    public int platTwoH = platOneH;
+
+    public int platThreeX = 443;
+    public int platThreeY = 168;
+    public int platThreeW = platOneW;
+    public int platThreeH = platOneH;
 
     public int wallX = 0; // wallX = 0 because it needs to spawn at the side
     public int wallY = 380;
@@ -99,7 +107,9 @@ public class Game extends JPanel implements KeyListener, MouseListener{
             g.fillRect(wallX, wallY, 800, 10);
 
             g.setColor(Color.BLACK); // Platforms
-            g.fillRect(platOneX, platOneY, 50, 10);
+            g.fillRect(platOneX, platOneY, platOneW, platOneH);
+            g.fillRect(platTwoX, platTwoY, platTwoW,platTwoH);
+            g.fillRect(platThreeX, platThreeY, platThreeW,platThreeH);
         }
 
         if(options) {
@@ -136,11 +146,31 @@ public class Game extends JPanel implements KeyListener, MouseListener{
             secHasPassed = false;
         }
 
-        if(charX < platOneX + platOneW &&
+        if(charX < platOneX + platOneW && // Collision for plat 1 and so on
                 charX + charW > platOneX &&
                 charY < platOneY + platOneH &&
-                charH + charY  > platOneY) { //TODO  Get it so that it stops him when he hits the bottom
+                charH + charY > platOneY) { //TODO  Get it so that it stops him when he hits the bottom
             charY = platOneY-30;
+            numOfJumps = 0;
+            charVY = 0;
+            wallCollision = true;
+        }
+
+        if(charX < platTwoX + platTwoW &&
+                charX + charW > platTwoX &&
+                charY < platTwoY + platTwoH &&
+                charH + charY > platTwoY) {
+            charY = platTwoY-30;
+            numOfJumps = 0;
+            charVY = 0;
+            wallCollision = true;
+        }
+
+        if(charX < platThreeX + platThreeW &&
+                charX + charW > platThreeX &&
+                charY < platThreeY + platThreeH &&
+                charH + charY > platThreeY) {
+            charY = platThreeY-30;
             numOfJumps = 0;
             charVY = 0;
             wallCollision = true;
