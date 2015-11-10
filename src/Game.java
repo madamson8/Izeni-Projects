@@ -31,6 +31,7 @@ public class Game extends JPanel implements KeyListener, MouseListener{
     int charVX = 0;
     int charVY = 0;
     int numOfJumps = 0;
+    int maxJumps = 2;
 
     int buttOneX = 20; // button int stats
     int buttOneY = 20;
@@ -53,6 +54,8 @@ public class Game extends JPanel implements KeyListener, MouseListener{
     int wallX = 0; // wallX = 0 because it needs to spawn at the side
     int wallY = 380;
     int secondsPassed = 0;
+    final int WIN_WIDTH = 800;
+    final int WIN_HEIGHT = 700;
 
     int goomX = 525; // Enemy stats
     int goomY = wallY-30;
@@ -85,6 +88,7 @@ public class Game extends JPanel implements KeyListener, MouseListener{
         while(true) {   // Main Loop !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             game.repaint();
             game.customUpdate();
+            game.backAndForthEnemy();
             timer.setText(String.valueOf(game.secondsPassed));
             if(System.currentTimeMillis() > game.time + 1000 && !game.secHasPassed) {
                 game.time = System.currentTimeMillis();
@@ -146,7 +150,7 @@ public class Game extends JPanel implements KeyListener, MouseListener{
             exit = true;
         }
 
-        if(charY+30 >= wallY) { // TODO:: Create a range for charX, maybe set it to x > x x < x .  obviously an idea
+        if(charY+30 >= wallY) {
             charY = wallY-30;
             charVY = 0;
             wallCollision = true; // numOfJumps set to 0 because it increases by 1 every time you jump, allowing as many jumps as the programmer desires
@@ -154,17 +158,42 @@ public class Game extends JPanel implements KeyListener, MouseListener{
             secHasPassed = false;
         }
 
-        if(charX < platOneX + platOneW && // Collision for plat 1 and so on
+        if(charY < platOneY &&
+                charX < platOneX + platOneW && // Collision for plat 1 and so on
                 charX + charW > platOneX &&
                 charY < platOneY + platOneH &&
                 charH + charY > platOneY) { //TODO  Get it so that it stops him when he hits the bottom
             charY = platOneY-30;
             numOfJumps = 0;
             charVY = 0;
-            wallCollision = true;
+            wallCollision = true; // Gets top of the platform collision
         }
 
-        if(charX < platTwoX + platTwoW &&
+        if(charY > platOneY &&
+                charX < platOneX + platOneW && // Collision for plat 1 and so on
+                charX + charW > platOneX &&
+                charY < platOneY + platOneH &&
+                charH + charY > platOneY) { //TODO  Get it so that it stops him when he hits the bottom
+            charY = platOneY+platOneH+1;
+            numOfJumps = maxJumps;
+            charVY = 0;
+            wallCollision = true; // Gets bottom of platform collision
+        }
+
+        if(charY > platTwoY &&
+                charX < platTwoX + platTwoW &&
+                charX + charW > platTwoX &&
+                charY < platTwoY + platTwoH &&
+                charH + charY > platTwoY) {
+            charY = platTwoY+platTwoH+1;
+            numOfJumps = maxJumps;
+            charVY = 0;
+            wallCollision = true;
+            System.out.println("Bottom");
+        }
+
+        if(charY < platTwoY &&
+                charX < platTwoX + platTwoW &&
                 charX + charW > platTwoX &&
                 charY < platTwoY + platTwoH &&
                 charH + charY > platTwoY) {
@@ -194,6 +223,20 @@ public class Game extends JPanel implements KeyListener, MouseListener{
             charVY = -15;
         }
 
+        if(charX < goomX + goomSize &&
+                charX + charW > goomX &&
+                charY < goomY + goomSize &&
+                charH + charY > goomY) {
+            gameOver();
+        }
+
+    }
+
+    public void gameOver() {
+        if(running) {
+            System.out.println("Game Over");
+        }
+        running = false;
     }
 
     public void options() {
@@ -202,16 +245,19 @@ public class Game extends JPanel implements KeyListener, MouseListener{
     }
 
     private void backAndForthEnemy() {
+        boolean goomR = false;
+        boolean goomL = true;
         int second = 0;
         if(running) {
             goomX += 3;
-            long time = System.currentTimeMillis();
-            if(time > time+1000) {
-                time = System.currentTimeMillis();
-                second += 1;
-                if(second > 1) {
-                    //TODO
-                }
+//            long time = System.currentTimeMillis();
+//            if(time > time+1000) {
+//                time = System.currentTimeMillis();
+//                second += 1;
+//
+//            }
+            if(goomX > WIN_WIDTH) {
+                goomX = 0;
             }
         }
 
@@ -269,6 +315,7 @@ public class Game extends JPanel implements KeyListener, MouseListener{
                 charX += 1;
                 break;
             case 82: // R
+                running = true;
                 break;
         }
 
