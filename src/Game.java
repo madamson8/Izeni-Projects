@@ -2,6 +2,8 @@
  * Created by darkp_000 on 11/2/2015.
  */
 
+package com.thefallenpaladin.mother;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -10,9 +12,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 @SuppressWarnings("serial")
-public class Game extends JPanel implements KeyListener, MouseListener{
+public class Game extends JPanel implements KeyListener, MouseListener {
 
-    boolean exit = false; // Booleans
+    boolean exit = false; // Booleans  these are mainly setting up.  you don't need to worry about most of these.
     boolean wallCollision = false;
     boolean secHasPassed = false;
     boolean options = false;
@@ -54,6 +56,8 @@ public class Game extends JPanel implements KeyListener, MouseListener{
     int wallX = 0; // wallX = 0 because it needs to spawn at the side
     int wallY = 380;
     int secondsPassed = 0;
+    int mouseX;
+    int mouseY;
     final int WIN_WIDTH = 800;
     final int WIN_HEIGHT = 700;
 
@@ -65,39 +69,39 @@ public class Game extends JPanel implements KeyListener, MouseListener{
     long time = System.currentTimeMillis();
 
     public static void main(String[] args) throws InterruptedException{
-        Game game = new Game();
+        Game game = new Game();  // This is just setting up the game
 
         JFrame window = new JFrame("Game.");
-        JLabel timer = new JLabel();
+        JLabel timer = new JLabel();  // This is being overwriten.  Worry about this later.
         timer.setLocation(300,20);
 
         window.add(game);
         window.setSize(800,700);
         window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        window.setResizable(false);
+        window.setResizable(false);  // false because it would mess with everything if resized.
         game.add(timer);
 
         window.setFocusable(true);
         window.setVisible(true);
         game.addKeyListener(game);
-        game.addMouseListener(game);
+        game.addMouseListener(game); // Getting key listeners and mouse listeners
         game.requestFocusInWindow();
 
-        window.setLocationRelativeTo(null);
+        window.setLocationRelativeTo(null); // last so it sets in middle
 
         while(true) {   // Main Loop !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            game.repaint();
+            game.repaint(); // calling paint()
             game.customUpdate();
-            game.backAndForthEnemy();
-            timer.setText(String.valueOf(game.secondsPassed));
+            game.backAndForthEnemy();  // calling respective methods
+            timer.setText(String.valueOf(game.secondsPassed)); // Is overwritten.  worry about later.
             if(System.currentTimeMillis() > game.time + 1000 && !game.secHasPassed) {
-                game.time = System.currentTimeMillis();
+                game.time = System.currentTimeMillis(); // Gets one second.
             }
 
-            Thread.sleep(1000 / 60);
+            Thread.sleep(1000 / 60); // 60 fps
             if(game.exit) { // Exiting Loop
-                System.out.println("Exiting");
-                window.dispose();
+                System.out.println("Exiting"); // exit is true on button clicked when escape is pressed. opens up a menu
+                window.dispose(); // closes the window
                 break;
             }
         }
@@ -106,17 +110,17 @@ public class Game extends JPanel implements KeyListener, MouseListener{
     public void paint(Graphics g) { // Remember, only graphics painting goes in here   ,  if you want to change anything like window size
         super.paint(g); // Repaints the window                             you need to change it here too.
         if(levelInGame || !options) {
-            g.setColor(Color.GREEN);
+            g.setColor(Color.GREEN); // Ahead are the stats for drawing characters ect.
             g.fillRect(0, 0, 800, 700); // Window
 
             g.setColor(Color.BLUE);
             g.fillRect(charX, charY, 20, 30); // Character
 
             g.setColor(Color.BLACK); // wall
-            g.fillRect(wallX, wallY, 800, 10);
+            g.fillRect(wallX, wallY, WIN_WIDTH, 10);
 
             // Platforms
-            g.fillRect(platOneX, platOneY, platOneW, platOneH);
+            g.fillRect(platOneX, platOneY, platOneW, platOneH); // Draws three sequential platforms
             g.fillRect(platTwoX, platTwoY, platTwoW,platTwoH);
             g.fillRect(platThreeX, platThreeY, platThreeW,platThreeH);
 
@@ -124,29 +128,29 @@ public class Game extends JPanel implements KeyListener, MouseListener{
             g.fillRect(goomX,goomY,goomSize,goomSize);
         }
 
-        if(options) {
+        if(options) { // activates when escape is pressed
             g.setColor(Color.BLACK);
             g.fillRect(0,0,800,700); // Window
-            g.setColor(Color.RED);
+            g.setColor(Color.RED); // button one
             g.fillRect(buttOneX,buttOneY,50,50);
         }
     }
 
     public void customUpdate() {  // Remember, all logic goes in here
-        if(charX > 780) {
+        if(charX > WIN_WIDTH-charW/2) { // Gets edges of screens relative to character
             charX = 0;
         }
         if(charX < 0) {
-            charX = 780;
+            charX = WIN_WIDTH-20;
         }
-        if(gravity) {
+        if(gravity) { // Grav can be disabled by wad  not s because i was lazy.
             charVY += 1;
             charY += charVY;
         }
         if(charY > 670-15) {
             charY = 0;
         }
-        if(buttonOne) {
+        if(buttonOne) { // will close the window.  first button on escape menu
             exit = true;
         }
 
@@ -158,11 +162,11 @@ public class Game extends JPanel implements KeyListener, MouseListener{
             secHasPassed = false;
         }
 
-        if(charY < platOneY &&
+        if(charY < platOneY && // ahead are alogrithms for collision
                 charX < platOneX + platOneW && // Collision for plat 1 and so on
                 charX + charW > platOneX &&
                 charY < platOneY + platOneH &&
-                charH + charY > platOneY) { //TODO  Get it so that it stops him when he hits the bottom
+                charH + charY > platOneY) {
             charY = platOneY-30;
             numOfJumps = 0;
             charVY = 0;
@@ -173,14 +177,14 @@ public class Game extends JPanel implements KeyListener, MouseListener{
                 charX < platOneX + platOneW && // Collision for plat 1 and so on
                 charX + charW > platOneX &&
                 charY < platOneY + platOneH &&
-                charH + charY > platOneY) { //TODO  Get it so that it stops him when he hits the bottom
+                charH + charY > platOneY) {
             charY = platOneY+platOneH+1;
             numOfJumps = maxJumps;
             charVY = 0;
             wallCollision = true; // Gets bottom of platform collision
         }
 
-        if(charY > platTwoY &&
+        if(charY > platTwoY && // TODO  find out why the bottom on two works but one doesnt  (theory) there is not enough time to pass through on the first plat
                 charX < platTwoX + platTwoW &&
                 charX + charW > platTwoX &&
                 charY < platTwoY + platTwoH &&
@@ -219,11 +223,11 @@ public class Game extends JPanel implements KeyListener, MouseListener{
         if(canMoveR) {
             charX += 5;
         }
-        if(charVY < -15) {
+        if(charVY < -15) { // Limits speed on y axis
             charVY = -15;
         }
 
-        if(charX < goomX + goomSize &&
+        if(charX < goomX + goomSize && // Initiates gameOver() when hit by a enemy that is not the name of a copyrighted character
                 charX + charW > goomX &&
                 charY < goomY + goomSize &&
                 charH + charY > goomY) {
@@ -239,14 +243,14 @@ public class Game extends JPanel implements KeyListener, MouseListener{
         running = false;
     }
 
-    public void options() {
+    public void options() { // Ignored.  TODO
         //TODO  get options running and make it happen on escape
 
     }
 
-    private void backAndForthEnemy() {
-        boolean goomR = false;
-        boolean goomL = true;
+    private void backAndForthEnemy() { // basic enemy on first screen
+        boolean goomR = false; // Ignored
+        boolean goomL = true; // Ignored
         int second = 0;
         if(running) {
             goomX += 3;
@@ -270,11 +274,11 @@ public class Game extends JPanel implements KeyListener, MouseListener{
     public void keyPressed(KeyEvent e) {  // Logic can be used in these
 //        System.out.println(e); // Enable to see what a keycode is.  Remember to disable
         switch (e.getKeyCode()) {
-            case 37:
+            case 37: // Left
                 gravity = true;
                 canMoveL = true;
                 break;
-            case 38:
+            case 38: // Up
                 gravity = true;
                 if (numOfJumps < 2) {
                     charVY -= 15;
@@ -284,19 +288,15 @@ public class Game extends JPanel implements KeyListener, MouseListener{
                     numOfJumps += 1;
                 }
                 break;
-            case 39:
+            case 39: // Right
                 gravity = true;
                 canMoveR = true;
                 break;
-            case 40:
+            case 40: // Down
                 charY += 5;
                 break;
             case 27: // Escape
                 options = true;
-                if (options) {
-                    levelInGame = true;
-                    options = false;
-                }
                 break;
             case 32: // Space
                 System.out.println(charX);
@@ -334,8 +334,8 @@ public class Game extends JPanel implements KeyListener, MouseListener{
     }
 
     public void mouseClicked(MouseEvent e) {
-        int mouseX = e.getX();
-        int mouseY = e.getY();
+        mouseX = e.getX(); // gets mouse x and y
+        mouseY = e.getY();
         if(mouseX > buttOneX && mouseX < buttOneX+50 && mouseY > buttOneY && mouseY < buttOneY+50 && options) { //
             buttonOne = true;
         }
