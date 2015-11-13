@@ -242,16 +242,15 @@ class Game extends JPanel implements KeyListener, MouseListener{
                 wallCollision = true; // Gets bottom of platform collision
             }
 
-            if (charY > platTwoY &&
+            if (charY > platTwoY - 15 &&
                     charX < platTwoX + platTwoW &&
                     charX + charW > platTwoX &&
                     charY < platTwoY + platTwoH &&
                     charH + charY > platTwoY) {
                 charY = platTwoY + platTwoH + 1;
-                numOfJumps = maxJumps;
                 charVY = 0;
+                numOfJumps = maxJumps;
                 wallCollision = true;
-                System.out.println("Bottom");
             }
 
             if (charY < platTwoY &&
@@ -423,6 +422,9 @@ class Game extends JPanel implements KeyListener, MouseListener{
                 running = true;
                 hasWon = false;
                 gravity = true;
+                levelInGame = true;
+                secondLevelInGame = false;
+                options = false;
                 invincibleMode = false;
                 break;
         }
